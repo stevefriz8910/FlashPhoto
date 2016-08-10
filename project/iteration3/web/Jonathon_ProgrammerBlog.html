@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<title> Home </title>
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <style>
+    .code {
+      font-family:monospace;
+    }
+
+    .block {
+      padding:15px;
+      background:#ccc;
+      display:block;
+    }
+  </style>
+</head>
+<body>
+	<div class="content">
+		<nav>
+			<span class = "page"> Home </span> |
+			<a href="usersupport.html" class = "page"> User Support </a> |
+			<a href="developersupport.html" class = "page"> Developer Support</a>|
+			<a href="Jake_ProgrammersBlog.html">Jake's Blog</a> |
+			<a href="Jonathon_ProgrammerBlog.html">Jon's Blog</a> |
+			<a href="Stevie_ProgrammersBlog.html">Stevie's Blog</a>
+		</nav>
+	</div>
+
+	<div class = "content">
+    <span class="code block">OBJFILES = $(addprefix $(OBJECT_DIR)/, $(notdir $(CPPFILES:.cpp=.o)))
+    <br>EXECUTABLES = $(addprefix ./, $(notdir $(CPPFILES:.cpp=)))
+    <br>
+    <br>all: setup tests<br><br>rebuild: clean all
+    <br>
+    <br># Create the object_files directory only if it does not exist.
+    <br>setup: | $(OBJECT_DIR)
+    <br>
+    <br>$(OBJECT_DIR):
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;mkdir -p $(OBJECT_DIR)
+    <br>
+    <br>tests: $(EXECUTABLES)
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;echo &quot;Testing FlashPhoto:&quot;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_blur
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_calligraphypen
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_eraser
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_filterBlur
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_filterChannel
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_filterEdgeDetect
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_filterMotionBlur
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_filterQuantize
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_filterSaturate
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_filterSharpen
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_filterSpecial
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_filterThreshold
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_highlighter
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_pen
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_spraycan
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_stamp
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;./test_xpen
+    <br>
+    <br>$(EXECUTABLES): $(OBJFILES) build/FlashPhoto.o $(GLUI_LIB) $(PNG_LIB) $(JPEG_LIB) $(LIBPHOTO_LIB)
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;$(CC) build/FlashPhoto.o $(LDFLAGS) $(LINK_LIBS) -o $@ $(OBJECT_DIR)/$@.o
+    <br>
+    <br>$(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;$(CC) $(CFLAGS) $(INCLUDE) &nbsp;-o $@ $&lt;
+    <br>
+    <br>build/FlashPhoto.o: FlashPhotoApp.cpp src/FlashPhotoApp.h
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;$(CC) $(CFLAGS) $(INCLUDE) -o build/FlashPhoto.o FlashPhotoApp.cpp
+  </span>
+  <p>This is a portion of the code from the makefile in the tests directory. &nbsp;While I did not write the entire code and used the makefile from FlashPhoto as a template, I did quite a bit of modification to the original makefile to make it serve our testing purposes, through which I learned a lot about the specifics of many of the makefile operations used.</p>
+  <p>This piece of code compiles and runs all of the tests for the FlashPhoto tools and filters. &nbsp;In order to do this, it first compiles all of the test files into .o files. &nbsp;This portion is very similar to the method used in FlashPhoto. &nbsp;After this, however, the method diverges a bit. &nbsp;After this, it needs to build the tests as separate executables, but link each individual (test).o file with FlashPhoto.o in order to actually test FlashPhoto. &nbsp;In order to accomplish this, I needed to figure out what $@ and $&lt; mean, and once I did, I was able to figure out a way to do this with the one target command: EXECUTABLES, which I set up all in one variable in the same way OBJFILES are setup. &nbsp;It had OBJFILES, FlashPhoto.o, and all of the libraries as dependencies to ensure that they were all compiled before and ready to use in linking. &nbsp;After this, I still had problems, as I didn&rsquo;t understand the -g linking flag, and thus put FlashPhoto.o at the end of the command which caused it to fail. &nbsp;I solved this by looking at the original FlashPhoto makefile and emulating their structure, by which I found out what the -g flag does and how to properly use it.</p>
+  <p>This, however, was not the end of the work there, as we needed to set it up so that calling &lsquo;make&rsquo; actually runs the tests. &nbsp;Thus, I made a new target: &lsquo;tests&rsquo;, which had EXECUTABLES as a dependency, which would run all of the tests when called. &nbsp;So, when &lsquo;make&rsquo; is called, a directory for the .o files is created, all of the (test).o files are compiled, FlashPhoto.o is compiled, any libraries that need compilation are compiled, the executables are linked and created, and then they are all run. &nbsp;When they are run, they print out the tool or filter that is being tested and whether the test is a success or failure.</p>
+  <p>For makefile programming, there wasn&rsquo;t a whole lot of leeway in the syntax for style, but I did learn a lot about using variables in makefiles instead of hard-coding everything in, which made the job a lot easier.</p>
+</div>
+
+<div class = "footer">
+  <!-- You can change the copyright! -->
+  <span class="copyright">&copy; 2015, CSCI 3081 Guru</span>
+</div>
+</body>
+</html>

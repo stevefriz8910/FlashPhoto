@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<title> Home </title>
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <style>
+    .code {
+      font-family:monospace;
+    }
+
+    .block {
+      padding:15px;
+      background:#ccc;
+      display:block;
+    }
+  </style>
+</head>
+<body>
+	<div class="content">
+		<nav>
+			<span class = "page"> Home </span> |
+			<a href="usersupport.html" class = "page"> User Support </a> |
+			<a href="developersupport.html" class = "page"> Developer Support</a>|
+			<a href="Jake_ProgrammersBlog.html">Jake's Blog</a> |
+			<a href="Jonathon_ProgrammerBlog.html">Jon's Blog</a> |
+			<a href="Stevie_ProgrammersBlog.html">Stevie's Blog</a>
+		</nav>
+	</div>
+
+	<div class = "content">
+    <h1>Converting and Segmenting a CT Scan Using MIA</h1>
+    <p><em>This tutorial assumes that you have a directory of .png or .jpeg images and that you know some Linux Terminal commands.</em></p>
+    <p>The MIA command line interface makes it easy to apply a set of filters to multiple images at once. In this tutorial, we will apply a set of filters to a directory of .png images from a CT Scan using the Linux Ubuntu built-in Terminal software. The filters we will apply are a slight blur, followed by a quantization with 4 bins.</p>
+    <ol>
+      <li>Move your directory of images into the same directory as the MIA program. Name this directory &ldquo;CTImages&rdquo;.</li>
+      <li>Use the Ubuntu search capability to find the &ldquo;Terminal&rdquo; program.</li>
+      <li>Use the built in &ldquo;cd&rdquo; command to navigate to the directory that contains the images and MIA program.</li>
+      <li>Create another folder in the directory using the <span class="code">mkdir</span> command.</li>
+    </ol>
+    <span class="code block">mkdir finishedCTImages</span>
+    <ol start="5">
+      <li>Now is the time to run a special command that will apply the filters to all the images in your directory.</li>
+    </ol>
+    <span class="code block">./Mia CTImages/ -blur 3.0 -quantize 4 finishedCTImages/</span>
+    <ul>
+      <li>The first argument specifies that we are running the Mia application.</li>
+      <li>The second argument specifies the folder where all of the original images can be found.</li>
+      <li>The third and fifth arguments specify the filter to be applied</li>
+      <li>The fourth and sixth arguments specify the intensity of the filter.</li>
+      <li>The last argument specifies the directory where the edited images should be saved.</li>
+    </ul>
+    <p>After running the command above, your images will be saved in the new directory.</p>
+    <p>Between the input directory and the output directory can be placed any of the following commands:</p>
+    <span class="code block">-h
+      <br>-sharpen &lt;Integer&gt;
+      <br>-edgedetect
+      <br>-thresh &lt;Float&gt;
+      <br>-quantize &lt;Integer&gt;
+      <br>-blur &lt;Float&gt;
+      <br>-saturate &lt;Float&gt;
+      <br>-multrgb &lt;Float&gt;,&lt;Float&gt;,&lt;Float&gt;
+      <br>-compare
+    </span>
+    <p>If &ldquo;-h&rdquo; is found anywhere in the command line, or if there is incorrect input, a help screen will be displayed and the program will exit without editing any of the photos.</p>
+  </div>
+
+	<div class = "footer">
+		<!-- You can change the copyright! -->
+		<span class="copyright">&copy; 2015, CSCI 3081 Guru</span>
+	</div>
+</body>
+</html>

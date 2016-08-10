@@ -1,0 +1,220 @@
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <style type="text/css">
+      ol{margin:0;padding:0}table td,table th{padding:0}.c3{background-color:#ffffff;max-width:468pt;padding:72pt 72pt 72pt 72pt}.c0{orphans:2;widows:2}.c1{font-size:10pt}.c2{height:11pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:"Arial"}p{margin:0;color:#000000;font-size:11pt;font-family:"Arial"}h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}
+    </style>
+  </head>
+  <body class="c3">
+    <p class="c0">
+      <span class="c1">// Redefine paintMask function from Tool class to allow for dark colors of pixelBuffer to show through
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">void Highlighter::paintMask(int x,int y,PixelBuffer **displayBuffer,ColorData color,ColorData backgroundColor) {
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; int i,j,bufferI,bufferJ,width,height;
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;float r,g,b,newR,newG,newB;
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; width = (*displayBuffer)-&gt;getWidth();
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; height = (*displayBuffer)-&gt;getHeight();
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; ColorData tempPixel;
+      </span>
+    </p>
+    <p class="c0 c2">
+      <span class="c1">
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; for (i=0;i&lt;maskSize;i++) {
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; for (j=0;j&lt;maskSize;j++) {
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bufferI = x + i - (maskSize/2) - 1;
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; bufferJ = y + j - (maskSize/2) - 1;
+      </span>
+    </p>
+    <p class="c0 c2">
+      <span class="c1">
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Make sure the width and length are correct, be prepared to swap if necessary
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; if ((bufferI &gt; 0) &amp;&amp; (bufferI &lt; width) &amp;&amp; (bufferJ &gt; 0) &amp;&amp; (bufferJ &lt; height)) {
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tempPixel = (**displayBuffer).getPixel(bufferI,height - bufferJ);
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r = tempPixel.getRed();
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g = tempPixel.getGreen();
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b = tempPixel.getBlue();
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tempPixel = tempPixel * (1 - getPixel(i,j));
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tempPixel = tempPixel + (color * getPixel(i,j));
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newR = tempPixel.getRed();
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newG = tempPixel.getGreen();
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newB = tempPixel.getBlue();
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (r &lt; newR) { 
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newR = r; 
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (g &lt; newG) { 
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newG = g; 
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (b &lt; newB) { 
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newB = b; 
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tempPixel.setRed(newR);
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tempPixel.setGreen(newG);
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tempPixel.setBlue(newB);
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (**displayBuffer).setPixel(bufferI,height - bufferJ,tempPixel);
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp; &nbsp; &nbsp; &nbsp; }
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">}
+      </span>
+    </p>
+    <p class="c0 c2">
+      <span class="c1">
+      </span>
+    </p>
+    <p class="c0 c2">
+      <span class="c1">
+      </span>
+    </p>
+    <p class="c0 c2">
+      <span class="c1">
+      </span>
+    </p>
+    <p class="c0 c2">
+      <span class="c1">
+      </span>
+    </p>
+    <p class="c0 c2">
+      <span class="c1">
+      </span>
+    </p>
+    <p class="c0 c2">
+      <span class="c1">
+      </span>
+    </p>
+    <p class="c0">
+      <span class="c1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </span>
+      <span>The above piece of code comes from the Highlighter.cpp file, which implements the Highlighter class. &nbsp;The particular portion of the file is the implementation of the paintMask method, which is initially implemented in the Tool superclass from which Highlighter inherits, but implemented virtually so that it can be overridden for classes such as Highlighter that need a different functionality than the other classes for this method. &nbsp;For this reason, it is overloaded in the Highlighter class so that the highlighter functions as a real-life highlighter does.
+      </span>
+    </p>
+    <p class="c0">
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now, although this function does need to be distinct from the general paintMask defined in Tool.cpp, it does share a lot of the code with the original paintMask method, so the method in Highlighter.cpp was originally copied and pasted from Tool.cpp and then modified to fit its specific purpose. &nbsp;Now, at the top are defined several variables: width and height as the width and height of the pixelBuffer, i and j to serve as the location in the mask, bufferI and bufferJ to serve as the location in the pixelBuffer, and r, g, b, newR, newG, and newB to keep track of the original and modified colors of the pixels. &nbsp;
+      </span>
+    </p>
+    <p class="c0">
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The code then loops through each location or &lsquo;pixel&rsquo; in the mask, and &lsquo;applies&rsquo; it to the pixelBuffer. &nbsp;It sets the bufferI and bufferJ values accordingly for ease of use in the rest of the code so as not to need to use (x+i-(maskSize/2)-1) repeatedly, and then checks to make sure that the pixel specified by bufferI and bufferJ exists, or that bufferI and bufferJ are valid coordinates, and if not, just skips it. &nbsp;In many of the other tools, this operation was simple, but for the highlighter it was more complicated because highlighters let darker colors that they are drawn over show through. &nbsp;Thus, for each pixel in the pixelBuffer we modified, we needed to save the original rgb values before modification so that we could compare them with the rgb values of the pixel after modification, and in order to make sure that darker colors showed through, set the pixel to the lower of the two (either old or new) value for red, green, and blue individually. &nbsp;
+      </span>
+    </p>
+    <p class="c0">
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;First, it gets the pixel it will modify and saves it as tempPixel to perform the more intensive modifications more easily. &nbsp;It then specifically saves the old rgb values of the pixel in the variables r, g, and b. &nbsp;Then, it diminishes the current ColorData (the pixel) at the location currently being operated on by the opacity of that location in the Highlighter mask, and then adds a ColorData object with the opacity of the location in the Highlighter mask and matching the color passed into the method to get the modified pixel value. &nbsp; This modification process is the same one that is used in the default paintMask method. &nbsp;
+      </span>
+    </p>
+    <p class="c0">
+      <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now, the new rgb values of the modified pixel are stored in the variables newR, newG, and newB, and are compared to the values r, g, and b, respectively. &nbsp;If any of the values r, g, or b are smaller than their respective modified counterparts, the corresponding new* variable is set to the old value to allow the darker (lower valued) color to remain. &nbsp;Then, it sets whatever values are stored in newR, newG, and newB, which should now be the darker between the new and old values as the rgb values for tempPixel. &nbsp;At this point, tempPixel is now the final value that we want to change the pixel at that location in pixelBuffer to, so we use setPixel to modify the actual pixel in the buffer, completing the modifications for the one specific pixel.
+      </span>
+    </p>
+  </body>
+</html>

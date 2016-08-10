@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<title> Home </title>
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <style>
+    .code {
+      font-family:monospace;
+    }
+
+    .block {
+      padding:15px;
+      background:#ccc;
+      display:block;
+    }
+  </style>
+</head>
+<body>
+	<div class="content">
+		<nav>
+			<span class = "page"> Home </span> |
+			<a href="usersupport.html" class = "page"> User Support </a> |
+			<a href="developersupport.html" class = "page"> Developer Support</a>|
+			<a href="Jake_ProgrammersBlog.html">Jake's Blog</a> |
+			<a href="Jonathon_ProgrammerBlog.html">Jon's Blog</a> |
+			<a href="Stevie_ProgrammersBlog.html">Stevie's Blog</a>
+		</nav>
+	</div>
+
+	<div class = "content">
+    <h1>Adding A New Filter</h1>
+  <p>The first thing you must do is navigate to the &lsquo;src&rsquo; folder inside of the &lsquo;libphoto&rsquo; directory. It will be in this directory where you must create the .cpp and .h files of your new filter tool.</p>
+  <p>Now you must decide which type of filter that you wish to create. The two types that you can choose from are a normal filter or a convolution filter. A normal filter simply changes each pixel based on its own color data. A convolution filter changes each pixel based on its surrounding pixel&rsquo;s color data.</p>
+  <p>After you have chosen which type of filter you would like to add, you now have to create the class. Make sure that your filter class inherits from the correct filter superclass. Use the Filter class for a normal filter and the ConvolutionFilter class for a convolution filter. If you end up getting stuck, take a look at the code of the other filters that have already been written. Saturate, Threshold, Channels, Quantize are all good normal filters to look at. Sharpen, BlurFilter, EdgeDetection, Emboss, and MotionBlur are the convolution filters that you can look at as well.</p>
+  <p>Once you have completed your very own filter, the next step is to go back into the main directory and then into the src folder in the FlashPhoto directory. Some changes will need to be made inside of FlashPhoto.cpp if you want to be able to test your filter live. Below are the instructions for what exactly needs to be changed. Photos are included to make your life a little bit easier.</p>
+  <h4>From FlashPhotoApp.h:</h4>
+  <span class="code block">Threshold thresh;
+  <br>Saturate saturate;
+  <br>Channels channels;
+  <br>Quantize quantize;
+  <br>TStamp stamp;
+  <br>EdgeDetection* edgeDet;
+  <br>Sharpen* sharpen;
+  <br>MotionBlur* motionBlur;
+  <br>BlurFilter* blur;
+  <br>Emboss* emboss;
+  </span>
+  <p>In the code block above, which is taken from the FlasPhotoApp header file, the filter variables are declared. If the filter you are adding inherits from the Convolution Filter class, it should be a pointer. If it inherits from the generic Filter class, then it does not need to be a pointer.</p>
+  <h4>From FlashPhotoApp.cpp:</h4>
+  <span class="code block">void FlashPhotoApp::initializeTools() {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new Pen());
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new Eraser());
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new SprayCan());
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new CalligraphyPen());
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new Highlighter());
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new XPen());
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new Blur());
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;stamp = TStamp();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;thresh = Threshold();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;saturate = Saturate();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;channels = Channels();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;quantize = Quantize();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;edgeDet = new EdgeDetection();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;sharpen = new Sharpen();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;motionBlur = new MotionBlur();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;blur = new BlurFilter();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;emboss = new Emboss();
+  <br>}
+  </span>
+  <p>The code above shows the first place where new code needs to be added to accommodate your new filter. Here, you should instantiate the filter object using <span class="code">new</span> if it is a Convolution Filter.</p>
+  <span class="code block">GLUI_Panel *sharpenPanel = new GLUI_Panel(filterPanel, "Sharpen");
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;{
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;GLUI_Spinner * filterSharpAmount = new GLUI_Spinner(sharpenPanel, "Amount:", &m_filterParameters.sharpen_amount);
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;filterSharpAmount->set_int_limits(0, 100);
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;filterSharpAmount->set_int_val(5);
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;new GLUI_Button(sharpenPanel, "Apply", UI_APPLY_SHARP, s_gluicallback);
+  <br>}
+  </span>
+  <p>You will also need to add another GLUI_Panel to the list of panels that already exist. Based on the filter that you created, you will need to figure out how you want to be able to adjust the intensity of the filter. You will also need to set some default values if your filter requires this. If you get stuck, look at the photo above and if that&rsquo;s not enough look at the source code where more examples will be visible.</p>
+  <span class="code block">void FlashPhotoApp::applyFilterSharpen() {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;storePixelBuffer();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;sharpen->applyFilter(m_displayBuffer, m_filterParameters.sharpen_amount, -1);
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;cout << "Apply has been clicked for Sharpen with amount = " << m_filterParameters.sharpen_amount << endl;
+  <br>}
+  </span>
+  <p>You will need to create another method just like the one in the code given above. This step is essentially copy-paste. The only things you need to change are the variable name and the methods that you call when applying your filter.</p>
+  <span class="code block">void FlashPhotoApp::gluiControl(int controlID) {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;switch (controlID) {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.......
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case UI_APPLY_BLUR:
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;applyFilterBlur();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case UI_APPLY_SHARP:
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;applyFilterSharpen();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;case UI_APPLY_MOTION_BLUR:
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;applyFilterMotionBlur();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.......
+  <br>}
+  </span>
+  <p>The next change that needs to be made in FlashPhoto.cpp is that you will need to add a case to the switch statement in the code above. This part is pretty self explanatory and you should be able to figure out what to add based on said code.</p>
+  <p>After you have completed all of these steps, your brand new filter should be ready to go!</p>
+</div>
+
+<div class = "footer">
+  <!-- You can change the copyright! -->
+  <span class="copyright">&copy; 2015, CSCI 3081 Guru</span>
+</div>
+</body>
+</html>

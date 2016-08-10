@@ -1,0 +1,14 @@
+FlashPhoto/FlashPhoto
+FlashPhoto/build
+Mia/Mia
+Mia/build
+glui/lib
+glui/build
+jpeg/lib
+jpeg/bin
+*.o
+*.a
+png/lib
+png/bin
+libphoto/lib
+libphoto/build

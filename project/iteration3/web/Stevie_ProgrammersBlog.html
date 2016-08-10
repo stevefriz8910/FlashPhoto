@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<title> Home </title>
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <style>
+    .code {
+      font-family:monospace;
+    }
+
+    .block {
+      padding:15px;
+      background:#ccc;
+      display:block;
+    }
+  </style>
+</head>
+<body>
+	<div class="content">
+		<nav>
+			<span class = "page"> Home </span> |
+			<a href="usersupport.html" class = "page"> User Support </a> |
+			<a href="developersupport.html" class = "page"> Developer Support</a>|
+			<a href="Jake_ProgrammersBlog.html">Jake's Blog</a> |
+			<a href="Jonathon_ProgrammerBlog.html">Jon's Blog</a> |
+			<a href="Stevie_ProgrammersBlog.html">Stevie's Blog</a>
+		</nav>
+	</div>
+
+	<div class = "content">
+  <body>
+    <span class="code block">CPP_FILES = $(wildcard src/*.cpp)
+    <br>OBJ_FILES = $(patsubst src/%.cpp,build/%.o,$(CPP_FILES))
+    <br>CXXFLAGS = -c -Wall
+    <br>
+    <br>all: prereqs lib/libphoto.a
+    <br>
+    <br>lib/libphoto.a: $(OBJ_FILES)
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ar rcs $@ $^
+    <br>
+    <br>build/%.o: src/%.cpp
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g++ $(CXXFLAGS) -o $@ $&lt;
+    <br>
+    <br>prereqs:
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mkdir -p lib
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mkdir -p build
+    <br>
+    <br>.PHONY: prereqs
+    <br>
+    <br>clean:
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rm &nbsp;$(OBJ_FILES) lib/libphoto.a
+    </span>
+    <p>The code above is the Makefile that I wrote to create the libphoto library. The first three lines are making variables that make writing the actual code a lot more convenient. These variables also result in less change of code later due only having to change what the variable equals versus multiple lines of code spread throughout the file.</p>
+    <p>The next line is the make target all. When you type make all in the directory where this makefile is, it will go to that target. In this case, the dependencies of the target all include the targets prereq and lib/libphoto.a. This means that if there have been any changes to these files, Make will know they&rsquo;ve been changed and call the respective targets.</p>
+    <p>The next target in the list is lib/libphoto.a. The dependency for this target is our variable OBJ_FILES which is all of the .o files inside the build folder in the libphoto directory. This target does not only have dependencies but also initiates a command. This command archives all of the .o files into a .a file which happens to be the library itself.</p>
+    <p>The next target &nbsp;is all of the .o files which obviously has the dependency of all of the .cpp files. This target also performs a command just like the last one. This one compiles all of the .cpp files into .o files so that they can then be archived into the library.</p>
+    <p>The next target is called prereqs which is the dependency from the first target, all. This one makes sure that the lib and build directories exist before it starts placing files into non-existent directories.</p>
+    <p>The next line of code tells make that prereqs is a phony target. &lsquo;prereqs&rsquo; needs to be a phony target because it is not a legitimate file name and therefore you have to tell Make that this is the case. Otherwise, Make would never call prereqs because the &ldquo;file&rdquo; would never get changed and dependencies only get called if they have been changed.</p>
+    <p>The final target in this Makefile is clean. Clean essentially cleans up after the compiler. It removes all of the .o files and also the .a file from their respective directories. This is necessary in order to be able to update your project as you change the source files within it. An old .o file won&rsquo;t contain the changes that you just made in the corresponding .cpp file.</p>
+  </div>
+
+  <div class = "footer">
+    <!-- You can change the copyright! -->
+    <span class="copyright">&copy; 2015, CSCI 3081 Guru</span>
+  </div>
+  </body>
+</html>

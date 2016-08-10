@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<title> Home </title>
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <style>
+    .code {
+      font-family:monospace;
+    }
+
+    .block {
+      padding:15px;
+      background:#ccc;
+      display:block;
+    }
+  </style>
+</head>
+<body>
+	<div class="content">
+		<nav>
+			<span class = "page"> Home </span> |
+			<a href="usersupport.html" class = "page"> User Support </a> |
+			<a href="developersupport.html" class = "page"> Developer Support</a>|
+			<a href="Jake_ProgrammersBlog.html">Jake's Blog</a> |
+			<a href="Jonathon_ProgrammerBlog.html">Jon's Blog</a> |
+			<a href="Stevie_ProgrammersBlog.html">Stevie's Blog</a>
+		</nav>
+	</div>
+
+	<div class = "content">
+    <h1>Adding A New Brush Tool</h1>
+    <p>The first thing you must do is navigate to the &lsquo;src&rsquo; folder inside of the &lsquo;libphoto&rsquo; directory. It will be in this directory where you must create the .cpp and .h files of your new brush tool.</p>
+    <p>All of the needed methods are already inherited from the Tool superclass so the only code you need to write is the constructor and deconstructor.</p>
+    <span class="code block">Pen::Pen() {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;int i, j;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;maskSize = 7;
+    <br>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;// Allocate space for mask, double array
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;mask=(float**) malloc(maskSize*sizeof(float*));
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;for (i=0;i&lt;maskSize;i++) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mask[i]=(float*) malloc(maskSize*sizeof(float));
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;// Store float values within the mask
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;for (i=0;i&lt;maskSize;i++) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (j=0;j&lt;maskSize;j++) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (((2 &lt; i) &amp;&amp; (i &lt; 6)) &amp;&amp; ((2 &lt; j) &amp;&amp; (j &lt; 6))) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mask[i][j] = 1.0;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mask[i][j] = 0;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>}
+    <br>
+    <br>// Deallocate space created by the Pen mask
+    <br>Pen::~Pen() {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;int i;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;for (i=0;i&lt;maskSize;i++) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;delete[] mask[i];
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;delete[] mask;
+    <br>}
+    </span>
+    <p>The picture above provides an example on how the basic Pen tool class is implemented. The two main things to focus on are the mask size being set near the top and the double for-loop at the bottom of the constructor method. The mask size will determine how large your tool will draw in square pixels. The for- loop that was mentioned above iterates through this square mask and gives each pixel a color intensity, 1.0 being 100 percent and 0.0 being 0 percent. Through this double for-loop you can create just about any shape that you want. If you are looking to make a circular tool, take a look at the SprayCan.cpp as it utilizes a distance function which will save you some time.</p>
+    <p>After the new tool class has been created, you must navigate back into the main directory and then into the FlashPhoto directory. From here go into the &lsquo;src&rsquo; folder and open up FlashPhoto.cpp</p>
+
+    <span class="code block">void FlashPhotoApp::initializeTools() {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new Pen());
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new Eraser());
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new SprayCan());
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new CalligraphyPen());
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new Highlighter());
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new XPen());
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;tools.push_back(new Blur());
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;stamp = TStamp();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;thresh = Threshold();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;saturate = Saturate();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;channels = Channels();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;quantize = Quantize();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;edgeDet = new EdgeDetection();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;sharpen = new Sharpen();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;motionBlur = new MotionBlur();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;blur = new BlurFilter();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;emboss = new Emboss();
+    <br>}
+    <br>
+    <br>void FlashPhotoApp::initGlui() {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;// Select first tool (this activates the first radio button in glui)
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;m_curTool = 0;
+
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;GLUI_Panel *toolPanel = new GLUI_Panel(m_glui, "Tool Type");
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;{
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GLUI_RadioGroup *radio = new GLUI_RadioGroup(toolPanel, &m_curTool, UI_TOOLTYPE, s_gluicallback);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Create interface buttons for different tools:
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new GLUI_RadioButton(radio, "Pen");
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new GLUI_RadioButton(radio, "Eraser");
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new GLUI_RadioButton(radio, "Spray Can");
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new GLUI_RadioButton(radio, "Caligraphy Pen");
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new GLUI_RadioButton(radio, "Highlighter");
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new GLUI_RadioButton(radio, "XPen");
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new GLUI_RadioButton(radio, "Blur");
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;new GLUI_RadioButton(radio, "Stamp");
+    <br>}
+    </span>
+    <p>While in FlashPhoto.cpp scroll down to the two methods pictured above. In the initializeTools() method, replicate the call to <span class="code">tools.push_back(new [Your New Tool Constructor]);</span> and place it immediately following the creation of the Blur Tool. Then, in the initGlui() method, add a new GLUI Radio Button immediately after the Blur Tool: <span class="code">new GLUI_RadioButton(radio, "[Your Tool Name]");</span></p>
+    <p>After you have completed these steps, your brand new tool should be ready to roll!</p>
+  </div>
+
+  <div class = "footer">
+    <!-- You can change the copyright! -->
+    <span class="copyright">&copy; 2015, CSCI 3081 Guru</span>
+  </div>
+  </body>
+</html>

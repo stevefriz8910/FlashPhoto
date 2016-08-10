@@ -1,0 +1,59 @@
+<html>
+  <head>
+      <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+        <style type="text/css">ol{margin:0;padding:0}table td,table th{padding:0}.c2{background-color:#ffffff;max-width:468pt;padding:72pt 72pt 72pt 72pt}.c0{orphans:2;widows:2}.c1{height:11pt}.title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:"Arial"}p{margin:0;color:#000000;font-size:11pt;font-family:"Arial"}h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:14pt;color:#666666;font-size:12pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:12pt;color:#666666;font-size:11pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}</style>
+  </head>
+  <body class="c2">
+    <p class="c0"><span>XPen::XPen() {</span></p>
+    <p class="c0"><span>&nbsp; &nbsp; int i, j;</span></p>
+    <p class="c0"><span>&nbsp; maskSize = 21;</span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0"><span>&nbsp; &nbsp; // Allocate space for mask, double array</span></p>
+    <p class="c0"><span>&nbsp; &nbsp; &nbsp; mask=(float**) malloc(maskSize*sizeof(float*));</span></p>
+    <p class="c0"><span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (i=0;i&lt;maskSize;i++) {</span></p>
+    <p class="c0"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mask[i]=(float*) malloc(maskSize*sizeof(float));</span></p>
+    <p class="c0"><span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0"><span>&nbsp; &nbsp; // Stores the float values inside the mask</span></p>
+    <p class="c0"><span>&nbsp; &nbsp; for (i=0;i&lt;maskSize;i++) {</span></p>
+    <p class="c0"><span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (j=0;j&lt;maskSize;j++) {</span></p>
+    <p class="c0"><span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mask[i][j] = 0.0;</span></p>
+    <p class="c0"><span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</span></p>
+    <p class="c0"><span>&nbsp; &nbsp; }</span></p>
+    <p class="c0"><span>&nbsp; for (i=0;i&lt;maskSize;i++) {</span></p>
+    <p class="c0"><span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (j=0;j&lt;maskSize;j++) {</span></p>
+    <p class="c0"><span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (i == j) {</span></p>
+    <p class="c0"><span>&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mask[i][j] = 1.0;</span></p>
+    <p class="c0"><span>&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mask[i][maskSize-j-1] = 1.0;</span></p>
+    <p class="c0"><span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</span></p>
+    <p class="c0"><span>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+    <p class="c0"><span>&nbsp; }</span></p>
+    <p class="c0"><span>}</span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0"><span>// Deallocates the space created by the mask</span></p>
+    <p class="c0"><span>XPen::~XPen() {</span></p>
+    <p class="c0"><span>&nbsp; &nbsp; &nbsp; int i;</span></p>
+    <p class="c0"><span>&nbsp; &nbsp; &nbsp; for (i=0;i&lt;maskSize;i++) {</span></p>
+    <p class="c0"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; free(mask[i]);</span></p>
+    <p class="c0"><span>&nbsp; &nbsp; &nbsp; }</span></p>
+    <p class="c0"><span>&nbsp; &nbsp; &nbsp; free(mask);</span></p>
+    <p class="c0"><span>}</span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0"><span>The XPen class utilizes methods that are similar to many of the other tools. It does not need to redefine the paintMask function because it applies to the canvas in a generic way. The above code details the implementation of the Xpen tool, and is taken from the XPen.cpp file. The first function is the XPen constructor, which is run when the main loop calls &ldquo;new XPen();&rdquo;. This allocates storage space on the heap for the XPen class. The second function is the XPen destructor, which is called whenever the main loop calls &ldquo;delete&rdquo;. A destructor must be present in the class so that the data that was stored on the heap gets reclaimed and able to be used again. </span></p>
+    <p class="c0"><span><br>For the XPen class, the object that must be instantiated on construction is the mask. This mask is a double array of float pointers, which point to data stored on the heap. The float data is the opacity of the ColorData that will be stored in the PixelBuffer. Because the opacity of the XPen should always be completely opaque, or not at all opaque, the float value will be either 1.0 or 0. First, in the constructor, we must allocate storage space for the mask on the heap. This is accomplished using a call to &ldquo;malloc&rdquo;. Because we are storing a double array, the first call to malloc will simply store pointers to arrays of float data. The for-loop iterates through the array of pointers and allocates space for an entire column of float data in each spot. Now, the pointers in the first array point to columns of float data of height maskSize. </span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0"><span>After we have allocated the appropriate amount of space on the heap, &nbsp;the next portion of the constructor assigns float values to the array. The first double for-loop iterates through the double array and initializes each value to zero. The second for loop iterates through the double array and checks if the i and j values are equal. If they are, then the value at that array spot is set to 1.0. In addition, the array spot in the mirror image is also set to 1.0. This is accomplished with a simple calculation that takes the maskSize, subtracts 1 (because the for loop is iterating from 0 to the maskSize-1) and then subtracts the j value.</span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0"><span>In my first iteration of this code, I used a simple if-else statement within one for-loop to set the values of the double array. The code checked if the i and j values were equal, then if they weren&rsquo;t, set the corresponding values to zero. The problem with this method was that for all i values less than half the maskSize and j values greater than half the maskSize, the value was always set to zero. This occurred because when the for-loop iterated to those values, it defaulted to the else statement, and the values were set to zero, even though they had previously been set to 1.0. Thus, I decided to initialize the entire double array to zero before setting any values to 1.0. </span></p>
+    <p class="c0 c1"><span></span></p>
+    <p class="c0"><span>The destructor is responsible for releasing the heap space that was set during the construction of the tool. First it iterates through the array of pointers and releases the data stored there using a call to &ldquo;free(mask[i])&rdquo;. Then it releases the array of pointers by calling &ldquo;free(mask)&rdquo;. Thus, all data that was stored on the heap during the creation of the class has been freed, and there are no memory leaks in the program.</span></p>
+  </body>
+</html>

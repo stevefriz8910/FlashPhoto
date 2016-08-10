@@ -1,0 +1,14 @@
+Testing via makefile
+---
+
+testfiles:
+  echo "File #1" > file1.txt
+  echo "File #2" > file2.txt
+  diff --brief file1.txt file2.txt ; if [ $$? -eq 0] ; then echo "They are the same!" ; else echo "They differ!" ; fi
+
+blurtest:
+  mia -blur 10 tests/tmp/blurtest.jpg
+  mia -compare tests/tmp/blurtest.jpg tests/blurtestgoldstandard.jpg
+
+tooltest:
+  mytooltest

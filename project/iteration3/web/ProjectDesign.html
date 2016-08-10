@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<title> Home </title>
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <style>
+    .code {
+      font-family:monospace;
+    }
+
+    .block {
+      padding:15px;
+      background:#ccc;
+      display:block;
+    }
+  </style>
+</head>
+<body>
+	<div class="content">
+		<nav>
+			<span class = "page"> Home </span> |
+			<a href="usersupport.html" class = "page"> User Support </a> |
+			<a href="developersupport.html" class = "page"> Developer Support</a>|
+			<a href="Jake_ProgrammersBlog.html">Jake's Blog</a> |
+			<a href="Jonathon_ProgrammerBlog.html">Jon's Blog</a> |
+			<a href="Stevie_ProgrammersBlog.html">Stevie's Blog</a>
+		</nav>
+	</div>
+
+	<div class = "content">
+    <h1>Iteration 3 Design</h1>
+    <p>To complete the FlashPhoto and Mia applications, we had to implement many tools, filters, and functions. &nbsp;To make this process easier, we used the bridge design pattern, first making general Tool, Filter, ConvolutionFilter, and ImageHandler classes, and then making specific classes that implement the generic methods in more specific ways.</p>
+    <p>For tools, this meant defining the specific effect they have when dragged on the canvas. The mask member variable of the Tool class could be designed to form a variety of shapes, given that it was a 2-D array of Floating point values. These floating values represented the opacity of the Tool. Each Tool had a different mask and therefore applied differently to the canvas.</p>
+    <p>For filters, how the filters applied to the canvas was different depending upon the filter&rsquo;s structure. The classes that inherited from the Filter class adjusted each Pixel on the canvas individually, and thus just needed to iterate over the PixelBuffer&rsquo;s 2D array and apply it&rsquo;s methods to each Pixel. The classes that inherited from the ConvolutionFilter class affected the pixels differently. They had a member variable called a Kernel that was a 2-D array of floating point values. The values in the kernel represented the amount that each pixel&rsquo;s values would affect the the center pixel&rsquo;s values. The kernel was applied to a temporary buffer using the display buffer values as reference. Then, it replaced the display buffer.</p>
+    <p>ImageHandlers load images differently depending upon the type of image that is selected. The ImageHandler class determines the image type, and then calls either IPNGHandler or IJPGHandler to load the image correctly.</p>
+    <p>Not pictured in the UML diagram is the Undo and Redo classes, which are responsible for storing the state of the PixelBuffer before changes are made, thus allowing the user to go back and forth between their edits of the buffer.</p>
+    <p>The structure of Mia is essentially the same as FlashPhoto, except with fewer classes due to its more focused design and purpose.</p>
+    <img alt="" src="images/image00.png" style="width: 624.00px; height: 258.67px; margin-left: 0.00px; margin-top: 0.00px; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px);" title="">
+  </div>
+
+  <div class = "footer">
+    <!-- You can change the copyright! -->
+    <span class="copyright">&copy; 2015, CSCI 3081 Guru</span>
+  </div>
+  </body>
+</html>

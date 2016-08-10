@@ -1,0 +1,62 @@
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+</head>
+<body>
+  <h1>UNDO AND REDO OPERATIONS</h1>
+  <p><em>By Jacob Grafenstein</em></p>
+  <h2>Storing the PixelBuffer</h2>
+  <p style="font-family:Courier New; background-color:#ddd;padding:10px;">void FlashPhotoApp::storePixelBuffer() {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Store the current pixelBuffer in the undoStack
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PixelBuffer *tempPixelBuffer = new PixelBuffer(canvasWidth,canvasHeight,backColor);
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_displayBuffer-&gt;copyPixelBuffer(m_displayBuffer, tempPixelBuffer);
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;undoStack.push_back(tempPixelBuffer);
+  <br>
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Empty the redoStack
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redoStack.clear();
+  <br>}</p>
+  <p class="c2">The above piece of code defines a function storePixelBuffer(). This function is used before any change is made to the PixelBuffer, such as on a leftMouseDown event or an applyFilter callback. The function first creates a new PixelBuffer and stores it on the heap. This allows the PixelBuffer to reside in memory and thus can be used outside of the function. Then, the current PixelBuffer (m_displayBuffer) is copied into the new PixelBuffer. A pointer to the new PixelBuffer is then pushed onto the undoStack, which is an implementation of std::vector. Additionally, the last line of code clears the redoStack, which would only contain PixelBuffers if a call to the undoOperation() function had previously been called.</p>
+  <h2>The Undo Operation</h2>
+  <p style="font-family:Courier New; background-color:#ddd;padding:10px;">void FlashPhotoApp::undoOperation() {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!undoStack.empty()) {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; &quot;Undoing...&quot; &lt;&lt; endl;
+  <br>
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Pull tempPixelBuffer off the undostack
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PixelBuffer *myNewPixelBuffer = undoStack.back();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;undoStack.pop_back();
+  <br>
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Put m_displayBuffer on redoStack
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PixelBuffer *tempPixelBuffer = new PixelBuffer(canvasWidth,canvasHeight,backColor);
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_displayBuffer-&gt;copyPixelBuffer(m_displayBuffer, tempPixelBuffer);
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redoStack.push_back(tempPixelBuffer);
+  <br>
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Set m_displayBuffer to tempPixelBuffer
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_displayBuffer = myNewPixelBuffer;
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; &quot;Nothing to undo&quot; &lt;&lt; endl;
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+  <br>}</p>
+  <p class="c2">The undoOperation() function is responsible for reverting the PixelBuffer back to a previous state before a change was made. This is accomplished by pulling stored PixelBuffers off of the undoStack and setting the pointer to the m_displayBuffer to a previous PixelBuffer. First, we need to check if the undoStack is empty. If it isn&rsquo;t, then we know that there are previous PixelBuffers available. First, we pop off the first element in the undoStack (the std::vector stores the most recent element at the back, hence the call to pop_back();). Then we create a temporary PixelBuffer and store it in the heap so that it can be accessed everywhere in the program. Then, we copy the current PixelBuffer into the temporary PixelBuffer and store a pointer to that temporary PixelBuffer in the redoStack. This allows a user to click the &ldquo;Redo&rdquo; button and get newer versions of the PixelBuffer. Lastly, we set the m_displayBuffer pointer to the PixelBuffer that was pulled off of the undoStack.</p>
+  <h2>The Redo Operation</h2>
+  <p style="font-family:Courier New; background-color:#ddd;padding:10px;">void FlashPhotoApp::redoOperation() {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!redoStack.empty()) {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; &quot;Redoing...&quot; &lt;&lt; endl;
+  <br>
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Pull displayBuffer off of redoStack
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PixelBuffer *myNewPixelBuffer = redoStack.back();
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;redoStack.pop_back();
+  <br>
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Put m_displayBuffer on undoStack
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PixelBuffer *tempPixelBuffer = new PixelBuffer(canvasWidth,canvasHeight,backColor);
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_displayBuffer-&gt;copyPixelBuffer(m_displayBuffer, tempPixelBuffer);
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;undoStack.push_back(tempPixelBuffer);
+  <br>
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Set m_displayBuffer to displayBuffer
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_displayBuffer = myNewPixelBuffer;
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; &quot;Nothing to redo&quot; &lt;&lt; endl;
+  <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+  <br>}</p>
+  <p class="c2">The redoOperation() function allows the user to undo a call to the undoOperation() function. In the undoOperation(), the newest PixelBuffer is stored on the redoStack. In the redoOperation(), we will retrieve that PixelBuffer. First, we check if the redoStack is empty. If it isn&rsquo;t, then we know that undoOperation() has recently been called and that we can restore one or more PixelBuffers. We get the last item in the redoStack and pop it off of the data structure. We create a temporary PixelBuffer and copy the the current display buffer into it. The temporary PixelBuffer gets stored in the undoStack in case we want to revert to it again. Then, we set the m_displayBuffer variable to the PixelBuffer we popped off of the redoStack.</p>
+  <p class="c2">Together, these free functions produce an important functionality in our program, and give the user much more control over their creations using our app. Now, if a mistake is made, it is easy to revert back to an older version of the PixelBuffer.</p>
+</body></html>

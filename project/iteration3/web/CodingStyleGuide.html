@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<title> Home </title>
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <style>
+    .code {
+      font-family:monospace;
+    }
+
+    .block {
+      padding:15px;
+      background:#ccc;
+      display:block;
+    }
+  </style>
+</head>
+<body>
+	<div class="content">
+		<nav>
+			<span class = "page"> Home </span> |
+			<a href="usersupport.html" class = "page"> User Support </a> |
+			<a href="developersupport.html" class = "page"> Developer Support</a>|
+			<a href="Jake_ProgrammersBlog.html">Jake's Blog</a> |
+			<a href="Jonathon_ProgrammerBlog.html">Jon's Blog</a> |
+			<a href="Stevie_ProgrammersBlog.html">Stevie's Blog</a>
+		</nav>
+	</div>
+
+	<div class = "content">
+    <h1>Coding Style Guide</h1>
+    <h2>Commenting</h2>
+    <p>Use of comments is highly encouraged to increase readability of code. Every class method should have a comment before declaration that explains the purpose of the method and its return values, if any. Within each method, comments should be clear and concise, so as not to over-complicate the method. Only include a comment if the particular piece of code you are referencing is challenging to read. Always place a comment on its own line and before the piece of code it references.</p>
+    <p>The start of every .cpp or .h file should contain a comment detailing the name of the file and the author. This comment is of the following format:</p>
+    <span class="code block">//
+    <br>// MyFile.h
+    <br>// Created by [Your Name]
+    <br>//
+    </span>
+    <h2>Printing to the Terminal</h2>
+    <p>Never use calls to the printf() function. Instead, rely on the standard library for printing to the terminal. In any given .cpp file, include the following code before method declarations:</p>
+    <span class="code block">#include &lt;stdlib.h&gt;
+    <br>
+    <br>using std::cout;
+    <br>using std::endl;
+    </span>
+    <p>Then, within the method, you may print to the terminal using the following format:</p>
+    <span class="code block">cout &lt;&lt; &ldquo;[your message here]&rdquo; &lt;&lt; endl;
+    </span>
+    <p>Variables may be printed using the standard library as well, such as:</p>
+    <span class="code block">cout &lt;&lt; &ldquo;This is my variable: &ldquo; &lt;&lt; myVariable &lt;&lt; endl;
+    </span>
+    <h2>Brackets</h2>
+    <p>The most important rule for bracket usage is that the left bracket should remain on the same line as the statement and above the code it contains. This is utilizing the K&amp;R bracing style. Several examples are given below.</p>
+    <h3>Function/Method Declarations</h3>
+    <span class="code block">YourApplication::someFunction(int aNumber) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;// Code here
+    <br>}
+    </span>
+    <h3>If-Else Statements</h3>
+    <p>For if-else statements, subsequent conditions should appear on the same line as the right bracket of the previous condition.</p>
+    <span class="code block">if (condition) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;// Code here
+    <br>} else if (condition) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;// Code here<
+    <br>} else {<
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;// Code here
+    <br>}
+    </span>
+    <h3>For-Loops</h3>
+    <p>Unlike if/else statements, each for-loop should start on its own line and should not follow a right bracket.</p>
+    <span class="code block">for (i;i&lt;j;i++) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;// Code here
+    <br>}
+    <br>
+    <br>for (k;k&lt;l;k++) {<
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;// Code here
+    <br>}
+    </span>
+    <h2>Indentation</h2>
+    <p>Indentation within methods should follow a Russian-doll nesting model. One indent (tab key) should be used for every piece of code that is nested within a for-loop, if-else statement, function/method declaration, or while-loop.</p>
+    <span class="code block">YourApplication::SomeMethod(int aNumber) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;if (condition) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (i;i&lt;j;j++) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (condition) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Code here
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>}
+    </span>
+    <h2>Declaring a Method/Function</h2>
+    <p>Method/Function names should not be capitalized, but all subsequent words within the method name should be capitalized.</p>
+    <span class="code block">YourApplication::yourFunction() {
+    <br>
+    <br>}
+    </span>
+    <p>Any method that gets a member variable should be named:</p>
+    <span class="code block">get[Variable name]();</span>
+    <p>Similarly, any method that sets a member variable should be named:</p>
+    <span class="code block">set[Variable name]();</span>
+    <p>All other methods are to be named at the discretion of the programmer. However, it is recommended that function names be concise and convey the purpose of the function.</p>
+    <h2>General Coding Rules</h2>
+    <ul>
+      <li >Delete all debugging calls to <span class="code">printf()</span> or <span class="code">cout/endl</span>.</li>
+      <li>Declare variables at the beginning of the function/method.</li>
+      <li>Use <span class="code">new</span> and <span class="code">delete</span> instead of <span class="code">malloc</span> and <span class="code">free</span>.</li>
+      <li>Class declarations should be capitalized and use CamelCase.</li>
+      <li>Pointers should be declared with the * butting up next to the type: <span class="code">int* myInt</span>.</li>
+    </ul>
+  </div>
+
+  <div class = "footer">
+    <!-- You can change the copyright! -->
+    <span class="copyright">&copy; 2015, CSCI 3081 Guru</span>
+  </div>
+  </body>
+</html>

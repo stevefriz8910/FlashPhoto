@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset = "utf-8">
+	<title> Home </title>
+	<link rel="stylesheet" type="text/css" href="stylesheet.css">
+  <style>
+    .code {
+      font-family:monospace;
+    }
+
+    .block {
+      padding:15px;
+      background:#ccc;
+      display:block;
+    }
+  </style>
+</head>
+<body>
+	<div class="content">
+		<nav>
+			<span class = "page"> Home </span> |
+			<a href="usersupport.html" class = "page"> User Support </a> |
+			<a href="developersupport.html" class = "page"> Developer Support</a>|
+			<a href="Jake_ProgrammersBlog.html">Jake's Blog</a> |
+			<a href="Jonathon_ProgrammerBlog.html">Jon's Blog</a> |
+			<a href="Stevie_ProgrammersBlog.html">Stevie's Blog</a>
+		</nav>
+	</div>
+
+	<div class = "content">
+    <h1>Command Line Interface for MIA</h1>
+    <p><em>By Jacob Grafenstein</em></p>
+    <h2>Method to get arguments from the command line input</h2>
+    <span class="code block">void MIAApp::traverseArguments(int argc, char* argv[]) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;int i = 1;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;int j = 0;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;int argEnd;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;const char *input;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;numFilters = 0;
+    <br>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toSharpen = -1;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toEdgeDetect = -1;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toBlur = -1;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toMultiplyRGB = -1;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toThreshold = -1;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toQuantize = -1;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toSaturate = -1;
+    <br>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;if (argc &gt; 2) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;argEnd = argc - 1;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;argEnd = argc;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;while (i &lt; argEnd) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input = argv[i];
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (!strcmp(input, &quot;-sharpen&quot;)) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numFilters++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toSharpen = j;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterParameters.sharpen_amount = atoi(argv[i+1]);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (m_filterParameters.sharpen_amount &gt; 0) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i += 2;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perror(&quot;Invalid Integer value for Sharpen&quot;);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (!strcmp(argv[i], &quot;-edgeDetect&quot;)) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numFilters++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toEdgeDetect = j;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (!strcmp(argv[i], &quot;-thresh&quot;)) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numFilters++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toThreshold = j;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterParameters.threshold_amount = atof(argv[i+1]);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (m_filterParameters.threshold_amount &gt; 0.0) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i += 2;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perror(&quot;Invalid Floating Point Value for Threshold&quot;);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (!strcmp(argv[i], &quot;-quantize&quot;)) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numFilters++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toQuantize = j;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterParameters.quantize_bins = atoi(argv[i+1]);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (m_filterParameters.quantize_bins &gt; 0) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i += 2;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perror(&quot;Invalid Integer value for Quantize&quot;);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (!strcmp(argv[i], &quot;-blur&quot;)) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numFilters++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toBlur = j;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterParameters.blur_amount = atof(argv[i+1]);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (m_filterParameters.blur_amount &gt; 0.0) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i += 2;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perror(&quot;Invalid Floating Point value to Blur&quot;);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (!strcmp(argv[i], &quot;-saturate&quot;)) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numFilters++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toSaturate = j;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterParameters.saturation_amount = atof(argv[i+1]);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (m_filterParameters.saturation_amount &gt; 0.0) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i += 2;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perror(&quot;Invalid Floating Point value for Saturate&quot;);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (!strcmp(argv[i], &quot;-multrgb&quot;)) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numFilters++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toMultiplyRGB = j;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getChannelParameters(argv[i+1]);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ((m_filterParameters.multiply_colorRed &gt; 0.0) &amp;&amp; (m_filterParameters.multiply_colorGreen &gt; 0.0) &amp;&amp; (m_filterParameters.multiply_colorBlue &gt; 0.0)) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i += 2;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perror(&quot;Invalid Floating Point value for multrgb&quot;);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else if (!strcmp(argv[i], &quot;-compare&quot;)) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;compareImages();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; &quot;Detected either -h or incomprehensible input&quot; &lt;&lt; endl;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;displayHelp();
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>}
+    </span>
+    <h3>Declaring the Method</h3>
+    <p>The <span class="code">traverseArguments()</span> method uses the input from the command line to record the the filters to be applied to the image, the intensity of those filters, and the order in which they should be applied. This method is just one piece of the command line interface, but serves a vital purpose. Because it is a rather large method, let&rsquo;s discuss it piece by piece.</p>
+    <span class="code block">void MIAApp::traverseArguments(int argc, char* argv[]) {</span>
+    <p>The inputs of the function are an argument that specifies the number of command line inputs and an array of strings. The function will not return an object because it will adjust member variables of the MIAApp class.</p>
+    <h3>Initializing an Important Member Variable</h3>
+    <span class="code block">m_filterOrder.toSharpen = -1;
+    <br>m_filterOrder.toEdgeDetect = -1;
+    <br>m_filterOrder.toBlur = -1;
+    <br>m_filterOrder.toMultiplyRGB = -1;
+    <br>m_filterOrder.toThreshold = -1;
+    <br>m_filterOrder.toQuantize = -1;
+    <br>m_filterOrder.toSaturate = -1;
+    </span>
+    <p>m_filterOrder is a struct that contains integer variables. It is a member variable of the MIAApp class. The purpose of this structure is to record which filters need to be applied and in what order. Here, they are all initialized to -1.</p>
+    <h3>Determining the Upper Bound for Iteration</h3>
+    <span class="code block">if (argc &gt; 2) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;argEnd = argc - 1;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;i++;
+    <br>} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;argEnd = argc;<
+    <br>}
+    </span>
+    <p>If the number of arguments in the command is less than two, then we safely rely on the fact that either the user&rsquo;s input was incorrect or that they have used the &ldquo;-h&rdquo; command to display help. Otherwise, we know that the last argument in the array of strings will be either the directory to save the images in or the name of the image to be saved. We do not want to iterate over this string, so we set argEnd (the upper bound on the iteration) to be the array slot that holds the last argument so that it is never parsed.</p>
+    <p>Notice the coding style here. The if-else statement uses K&amp;R bracing style as specified in our style guide. Notably, the first bracket appears on the same line as the condition, the else statement is on the same line as the second bracket, and the contents of the brackets use a full tab for indentation.</p>
+    <h3>The Loop</h3>
+    <span class="code block">while (i &lt; argEnd) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;input = argv[i];
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;if (!strcmp(input, &quot;-sharpen&quot;)) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;numFilters++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toSharpen = j;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j++;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m_filterParameters.sharpen_amount = atoi(argv[i+1]);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (m_filterParameters.sharpen_amount &gt; 0) {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i += 2;
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perror(&quot;Invalid Integer value for Sharpen&quot;);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;}
+    <br>}
+    </span>
+    <p>The while loop iterates over the command line input from after the first and second arguments (which contain &ldquo;./Mia&rdquo; and the name of the input file/directory) to the second to last argument (the last argument contains the name of the output file/directory). It stores the string from the argv array into a variable called input, and compares the string to the suspected command line strings. If it finds an expected string, such as &ldquo;-sharpen&rdquo; in the example above, it records the instance in the following ways:</p>
+      <ul>
+        <li>Increases the count of the number of filters that the user has requested, which will be used later in the command line interface.</li>
+        <li >Sets the m_filterOrder parameter to the value of j, which will be used to apply the filters in the correct order by increasing after every filter is found in the input.</li>
+        <li>m_filterParameters contains information about the intensity of the filters to be applied. The given filter&rsquo;s spot in m_filterParameters is set to be the next argument in the command line input, given the specifications of valid input.</li>
+        <li>The value is checked to make sure it is valid. Then, the integer i value is increased by 2 to account for the filter string and the intensity value.</li>
+      </ul>
+      <h3>Special Cases</h3>
+      <p>This process is repeated until there are no more command line arguments to iterate through. There are a few special cases for how valid arguments are handled, such as when &ldquo;-multrgb&rdquo; or &ldquo;-compare&rdquo; is found.</p>
+      <h4>-multrgb</h4>
+      <span class="code block">else if (!strcmp(argv[i], &quot;-multrgb&quot;)) {
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;numFilters++;
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterOrder.toMultiplyRGB = j;
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;j++;
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;getChannelParameters(argv[i+1]);
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;....
+      </span>
+      <p>The parameter for a call to &ldquo;-multrgb&rdquo; is different from the others in that it contains three values for the red value, the green value, and the blue value. Given the requirements, this parameter would have the form &lt;Float&gt;,&lt;Float&gt;,&lt;Float&gt; which required that it be parsed differently. Through a call to the getChannelParameters() method, the string is tokenized and stored in the appropriate places in m_filterParameters. The getChannelParameters() method is shown below:</p>
+      <span class="code block">void MIAApp::getChannelParameters(const char *channelArgs) {
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;char* pch = (char *) malloc(MAX_FILE_SIZE*sizeof(char));
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;char* newChannelArgs = (char *) malloc(MAX_FILE_SIZE*sizeof(char));
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;strcpy(newChannelArgs, channelArgs);
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;pch = strtok(newChannelArgs,&quot;,&quot;);
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterParameters.multiply_colorRed = atof(pch);
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;pch = strtok(NULL, &quot;,&quot;);
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterParameters.multiply_colorGreen = atof(pch);
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;pch = strtok(NULL, &quot;,&quot;);
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;m_filterParameters.multiply_colorBlue = atof(pch);
+      <br>}
+      </span>
+      <h4>-compare</h4>
+      <span class="code block">else if (!strcmp(argv[i], &quot;-compare&quot;)) {
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;compareImages();
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;displayHelp();
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+      <br>}
+      </span>
+      <p>When the string &ldquo;-compare&rdquo; is found in the command line, the program stops parsing the command line inputs, and immediately compares the input file and the output file. This was an important design decision to handle error. In the end, it was decided that the compare function should take precedence over the application of filters. However, if this was not what the user wanted to occur, after the images have been compared, the Help menu is displayed so they can see where their error occurred. After that, the program exits.</p>
+      <h3>Detecting &ldquo;-h&rdquo; or Incorrect Input</h3>
+      <span class="code block">else {
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;cout &lt;&lt; &quot;Detected either -h or incomprehensible input&quot; &lt;&lt; endl;
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;displayHelp();
+      <br>&nbsp;&nbsp;&nbsp;&nbsp;exit(1);
+      <br>}
+      </span>
+      <p>Finally, if the string is not equal to any of the expected inputs, it either is a call to &ldquo;-h&rdquo; or it is incorrect input. Thus by default, the program displays the Help menu so that the user may correct their mistake.</p>
+      <p>Thus, the <span class="code">traverseArguments()</span> function takes in the user&rsquo;s input, parses it, and sets up the member variables so that the filters can then be applied in the correct order and with the correct parameter values.</p>
+    </div>
+
+    <div class = "footer">
+      <!-- You can change the copyright! -->
+      <span class="copyright">&copy; 2015, CSCI 3081 Guru</span>
+    </div>
+    </body>
+  </html>
